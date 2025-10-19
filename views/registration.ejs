@@ -213,7 +213,7 @@
       .login-link a:hover {
         color: #7a9cff;
       }
-      .pass-container{
+      .pass-container {
         display: flex;
         border: 1px solid red;
       }
@@ -254,7 +254,7 @@
               type="text"
               id="username"
               name="username"
-              placeholder="Choose a username"
+              placeholder="<%= typeof errorMsg !== 'undefined' ? errorMsg : 'Choose a username' %>"
               required
               minlength="3"
             />
@@ -266,7 +266,7 @@
               type="text"
               id="fullname"
               name="fullname"
-            
+              value="<%= locals.fullname %>"
               placeholder="Your full name"
               required
             />
@@ -279,6 +279,7 @@
             type="email"
             id="email"
             name="email"
+            value="<%= locals.email %>"
             placeholder="Enter your email"
             required
           />
@@ -303,7 +304,7 @@
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-                value="SK@legend1326"
+              value="SK@legend1326"
               placeholder="Re-enter your password"
               required
             />

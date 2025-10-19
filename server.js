@@ -1,8 +1,10 @@
 import express from "express";
 import dotenv from 'dotenv'
+import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import { user } from "./models/user.model.js";
-import userRouter from "./routes/userRoutes.js"
+import userRouter from "./routes/userRoutes.js";
+import todoRouter from './routes/todoRoutes.js';
 
 
 
@@ -16,7 +18,15 @@ app.use(cookieParser())
 app.set("view engine", "ejs")
 app.use(express.json())
 app.use(userRouter)
+app.use(todoRouter)
 
+
+// connecting Database
+mongoose.connect("mongodb://localhost:27017", {
+  dbName: "userInfo",
+})
+  .then(() => console.log("Database connected"))
+  .catch((err) => console.error("DB connection error:", err));
 
 
 

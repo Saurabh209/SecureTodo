@@ -35,8 +35,8 @@ export const postloginSubmit = async (req, res) => {
             sameSite: 'strict',
             secure: false
         });
-
-        return res.redirect('/homePage');
+        console.log("after token created ")
+        return res.redirect('/');
 
     } catch (err) {
         console.error(err);
@@ -51,10 +51,11 @@ export const postregistrationSubmit = async (req, res) => {
         const isUserExist = await user.findOne({ username: req.body.username });
 
         if (isUserExist) {
-            res.render('/registration', {
+            res.render('registration', {
                 fullname: req.body.fullname,
                 email: req.body.email,
                 confirmPassword: req.body.confirmPassword,
+                errorMsg:"User with this name already exist"
             });
         } else {
             const hashpassword = await bcrypt.hash(req.body.password, 10)

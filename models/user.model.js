@@ -1,21 +1,36 @@
-
-import mongoose from "mongoose"
-
-
-mongoose.connect("mongodb://localhost:27017", {
-    dbName: 'userInfo',
-}).then(
-    () => { console.log("database connected") }
-)
-const newUsers = new mongoose.Schema({
-    fullname: String,
-    username: String,
-    email: String,
-    phone: Number,
-    password: String,
-}, { timestamps: true });
-
-export const user = mongoose.model('user', newUsers)
+import mongoose from "mongoose";
 
 
 
+const newUsers = new mongoose.Schema(
+  {
+    fullname: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      match: [/.+\@.+\..+/, "Invalid email format"],
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+    },
+  },
+  { 
+    timestamps: { createdAt: true, updatedAt: false } // only createdAt field
+  }
+);
+
+export const user = mongoose.model("user", newUsers);
