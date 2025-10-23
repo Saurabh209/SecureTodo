@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import { user } from '../models/user.model.js';
 import bcrypt from 'bcrypt'
-
+import { SetToken } from '../utils/SetToken.js';
 
 
 export const getnull = (req, res) => {
@@ -14,29 +14,28 @@ export const getlogin = (req, res) => {
 export const postloginSubmit = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const isUserExist = await user.findOne({ username });
+        const currentUser = await user.findOne({ username });
 
-        if (!isUserExist) {
-            console.log("user not exist");
-            return res.redirect('/login');
+        if (!currentUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid Username or Password"
+            })
         }
 
-        const isPasswordMatch = await bcrypt.compare(password, isUserExist.password);
-        console.log("password matched?", isPasswordMatch);
+        const isPasswordMatch = await bcrypt.compare(password, currentUser.password);
 
         if (!isPasswordMatch) {
-            return res.render('login', { errorMsg: 'Incorrect Password', username });
+            return res.status(401).json({
+                success: false,
+                message: "Invalid Username or Password"
+            })
         }
 
-        const userAuthToken = jwt.sign({ _id: isUserExist._id }, 'I Am Elden Lord');
-        res.cookie('isLoggedIn', userAuthToken, {
-            httpOnly: true,
-            maxAge: 24*60*60*1000,
-            sameSite: 'strict',
-            secure: false
-        });
-        console.log("after token created ")
-        return res.redirect('/');
+        const userAuthToken = jwt.sign({ _id: currentUser._id }, process.env.JWT_SECRET);
+
+        // setting token after authentication
+        SetToken(res, userAuthToken, currentUser)
 
     } catch (err) {
         console.error(err);
@@ -48,36 +47,28 @@ export const getregistration = (req, res) => {
 }
 export const postregistrationSubmit = async (req, res) => {
     try {
+
         const isUserExist = await user.findOne({ username: req.body.username });
-
         if (isUserExist) {
-            res.render('registration', {
-                fullname: req.body.fullname,
-                email: req.body.email,
-                confirmPassword: req.body.confirmPassword,
-                errorMsg:"User with this name already exist"
-            });
-        } else {
-            const hashpassword = await bcrypt.hash(req.body.password, 10)
-            const newUser = await user.create({
-                fullname: req.body.fullname,
-                username: req.body.username,
-                email: req.body.email,
-                password: hashpassword,
-            });
-
-            console.log('New user:', newUser);
-
-
-
-            const userAuthToken = jwt.sign({ _id: newUser._id }, 'I Am Elden Lord');
-
-            res.cookie('isLoggedIn', userAuthToken, {
-                httpOnly: true,
-            });
-            console.log("cookie Created: ", userAuthToken)
-            res.redirect('/');
+            return res.status(409).json({ success: false, message: "Username already taken" });
         }
+
+        const isEmailExist = await user.findOne({ email: req.body.email });
+        if (isEmailExist) {
+            return res.status(409).json({ success: false, message: "email already in use " });
+        }
+
+        const hashpassword = await bcrypt.hash(req.body.password, 10)
+        const currentUser = await user.create({
+            fullname: req.body.fullname,
+            username: req.body.username,
+            email: req.body.email,
+            password: hashpassword,
+        });
+
+        // setting token after authentication
+        SetToken(res, currentUser)
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

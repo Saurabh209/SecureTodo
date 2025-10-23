@@ -9,20 +9,20 @@ const router = express.Router();
 
 
 
-router.get('/', loginAuthenticator, getnull);
+// router.get('/', loginAuthenticator, getnull);
 
-router.get('/login', getlogin)
+// router.get('/login', getlogin)
 
 router.post('/loginSubmit', postloginSubmit)
 
-router.get('/registration', getregistration);
+// router.get('/registration', getregistration);
 
 router.post('/registrationSubmit', postregistrationSubmit);
 
-router.get('/homePage', loginAuthenticator, gethomePage)
+// router.get('/homePage', loginAuthenticator, gethomePage)
 
-router.get('/forgotPassword',(req,res)=>{
-    res.send('why you forgot password, DUMB')
-})
+// router.get('/forgotPassword',(req,res)=>{
+//     res.send('why you forgot password, DUMB')
+// })
 
 export default router;
