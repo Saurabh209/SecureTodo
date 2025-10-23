@@ -1,9 +1,9 @@
 import express from 'express';
-import { posttodoSubmit, getTodo } from '../controllers/todo.controller.js';
+import { postTodo, getTodo } from '../controllers/todo.controller.js';
 import { loginAuthenticator, } from '../middleware/auth.middleware.js';
 const router = express.Router();
 
-router.post('/todoSubmit',loginAuthenticator,posttodoSubmit)
-router.get('/Todo',loginAuthenticator,getTodo)
+router.post('/todo/add',loginAuthenticator,postTodo)
+router.get('/todo/view',loginAuthenticator,getTodo)
 
 export default router;

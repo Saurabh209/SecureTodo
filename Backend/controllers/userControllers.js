@@ -5,12 +5,7 @@ import bcrypt from 'bcrypt'
 import { SetToken } from '../utils/SetToken.js';
 
 
-export const getnull = (req, res) => {
-    res.redirect('/homePage');
-}
-export const getlogin = (req, res) => {
-    res.render('login')
-}
+
 export const postloginSubmit = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -32,18 +27,15 @@ export const postloginSubmit = async (req, res) => {
             })
         }
 
-        const userAuthToken = jwt.sign({ _id: currentUser._id }, process.env.JWT_SECRET);
+
 
         // setting token after authentication
-        SetToken(res, userAuthToken, currentUser)
+        SetToken(res, currentUser)
 
     } catch (err) {
         console.error(err);
         res.status(500).send("Internal Server Error");
     }
-}
-export const getregistration = (req, res) => {
-    res.render('registration');
 }
 export const postregistrationSubmit = async (req, res) => {
     try {
@@ -74,6 +66,47 @@ export const postregistrationSubmit = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-export const gethomePage = (req, res) => {
-    res.render('home')
+
+export const profile = async (req, res) => {
+    try {
+
+        const userProfile = await user.findById(req.user._id)
+
+        return res.status(200).json({
+            success: true,
+            userProfile
+        })
+    } catch (error) {
+
+    }
+}
+
+export const getAllUsers = async (req, res) => {
+    try {
+        const AllUsers = await user.find({})
+        console.log("all users: ", AllUsers)
+        return res.status(200).json({
+            AllUsers
+        })
+
+    } catch (error) {
+        return res.status(500).send("Internal Server Error")
+    }
+}
+
+
+export const getlogout = (req, res) => {
+    try {
+        res.cookie('isLoggedIn', null, {
+            expires: new Date(Date.now())
+        }).json({
+            success: true,
+            messgege: "logout successfull"
+        })
+    } catch (error) {
+        return res.status(404).json({
+            success:false,
+            messege:"logout failed"
+        })
+    }
 }
