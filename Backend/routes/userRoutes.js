@@ -18,4 +18,6 @@ router.get('/AllUsers', getAllUsers)
 
 router.get('/logout',loginAuthenticator,getlogout)
 
+
+
 export default router;

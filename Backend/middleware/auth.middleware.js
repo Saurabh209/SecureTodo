@@ -16,7 +16,6 @@ export const loginAuthenticator = (req, res, next) => {
         next()
 
     } catch (err) {
-      
         res.status(404).json({
             success:false,
             messege:"Invalid Token"

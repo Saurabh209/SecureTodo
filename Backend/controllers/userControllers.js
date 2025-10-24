@@ -6,25 +6,23 @@ import { SetToken } from '../utils/SetToken.js';
 
 
 
-export const postloginSubmit = async (req, res) => {
+export const postloginSubmit = async (req, res, next) => {
     try {
         const { username, password } = req.body;
         const currentUser = await user.findOne({ username });
 
         if (!currentUser) {
-            return res.status(404).json({
-                success: false,
-                message: "Invalid Username or Password"
-            })
+            const error = new Error("User not exist")
+            error.statuscode = 404
+            return next(error)
         }
 
         const isPasswordMatch = await bcrypt.compare(password, currentUser.password);
 
         if (!isPasswordMatch) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid Username or Password"
-            })
+            const error = new Error("Invalid Username or Password")
+            error.statuscode = 401
+            return next(error)
         }
 
 
@@ -33,8 +31,8 @@ export const postloginSubmit = async (req, res) => {
         SetToken(res, currentUser)
 
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Internal Server Error");
+        const error = new Error("")
+        return next(error)
     }
 }
 export const postregistrationSubmit = async (req, res) => {
@@ -62,22 +60,22 @@ export const postregistrationSubmit = async (req, res) => {
         SetToken(res, currentUser)
 
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+        const error = new Error("")
+        return next(error)
     }
 }
 
 export const profile = async (req, res) => {
     try {
-
         const userProfile = await user.findById(req.user._id)
 
         return res.status(200).json({
             success: true,
             userProfile
         })
-    } catch (error) {
-
+    } catch (err) {
+        const error = new Error("")
+        return next(error)
     }
 }
 
@@ -85,28 +83,29 @@ export const getAllUsers = async (req, res) => {
     try {
         const AllUsers = await user.find({})
         console.log("all users: ", AllUsers)
+
         return res.status(200).json({
             AllUsers
         })
 
-    } catch (error) {
-        return res.status(500).send("Internal Server Error")
+    } catch (err) {
+        const error = new Error("")
+        return next(error)
     }
 }
 
 
-export const getlogout = (req, res) => {
+export const getlogout = (req, res,next) => {
     try {
         res.cookie('isLoggedIn', null, {
-            expires: new Date(Date.now())
+            expires: new Date(0)
         }).json({
             success: true,
-            messgege: "logout successfull"
+            messgege: "Logout successful"
         })
-    } catch (error) {
-        return res.status(404).json({
-            success:false,
-            messege:"logout failed"
-        })
+    } catch (err) {
+        const error = new Error("Logout failed")
+        error.statuscode = 500
+        return next(error)
     }
 }
