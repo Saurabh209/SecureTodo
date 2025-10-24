@@ -95,10 +95,12 @@ export const getAllUsers = async (req, res) => {
 }
 
 
-export const getlogout = (req, res,next) => {
+export const getlogout = (req, res, next) => {
     try {
         res.cookie('isLoggedIn', null, {
-            expires: new Date(0)
+            expires: new Date(0),
+            secure: true,
+            sameSite: "none"
         }).json({
             success: true,
             messgege: "Logout successful"
