@@ -35,7 +35,7 @@ export const postloginSubmit = async (req, res, next) => {
         return next(error)
     }
 }
-export const postregistrationSubmit = async (req, res) => {
+export const postregistrationSubmit = async (req, res,next) => {
     try {
 
         const isUserExist = await user.findOne({ username: req.body.username });
@@ -65,7 +65,7 @@ export const postregistrationSubmit = async (req, res) => {
     }
 }
 
-export const profile = async (req, res) => {
+export const profile = async (req, res,next) => {
     try {
         const userProfile = await user.findById(req.user._id)
 
@@ -79,7 +79,7 @@ export const profile = async (req, res) => {
     }
 }
 
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res,next) => {
     try {
         const AllUsers = await user.find({})
         console.log("all users: ", AllUsers)
