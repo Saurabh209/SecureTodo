@@ -31,7 +31,7 @@ app.use(ErrorHandler)
 
 
 // connecting Database
-mongoose.connect("mongodb://localhost:27017", {
+mongoose.connect("mongodb+srv://saurabhhh209:EldenLord@cluster0.amdmprb.mongodb.net/", {
   dbName: "userInfo",
 })
   .then(() => console.log("Database connected"),
