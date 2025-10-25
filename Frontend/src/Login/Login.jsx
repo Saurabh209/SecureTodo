@@ -1,8 +1,33 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { backendServer } from "../App";
+import axios from "axios";
 import './Login.scss'
 
 export default function Login() {
+
+  // variables
+  const [username, setUsername] = useState();
+  const [password, setPassWord] = useState();
+
+  // handler for login submit
+  const loginHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const data = await axios.post(`${backendServer}/loginSubmit`, {
+        username, password
+      }, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true
+      })
+
+      toast.success(data.data.message)
+    } catch (error) {
+      toast.error("incorrect username or password")
+    }
+  }
+
   return (
     <div className="login-page-container" style={{
       backgroundImage: "url('/img/Login_Background.jpg')",
@@ -13,7 +38,7 @@ export default function Login() {
       <div className="content">
         <div className="text">Login</div>
 
-        <form className="login-form">
+        <form className="login-form" onSubmit={loginHandler}>
           {/* Email Field */}
           <div className="field">
             <span className="span">
@@ -30,8 +55,13 @@ export default function Login() {
                 />
               </svg>
             </span>
-            <input required type="text" className="input" />
-            <label className="label">Email or Phone</label>
+            <input
+              required
+              type="text"
+              className="input"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <label className="label">Username</label>
           </div>
 
           {/* Password Field */}
@@ -50,7 +80,12 @@ export default function Login() {
                 />
               </svg>
             </span>
-            <input required type="password" className="input" />
+            <input
+              required
+              type="password"
+              className="input"
+              onChange={(e) => setPassWord(e.target.value)}
+            />
             <label className="label">Password</label>
           </div>
 
@@ -63,7 +98,7 @@ export default function Login() {
           </button>
 
           <div className="sign-up">
-            Not a member? <a href="#">Signup now</a>
+            Not a member? <Link to="/registration">Signup now</Link>
           </div>
         </form>
       </div>

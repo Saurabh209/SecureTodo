@@ -1,19 +1,48 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from 'axios';
+import { backendServer } from "../App";
+import toast from 'react-hot-toast';
 import './Registration.scss'
 
 export default function Registration() {
+
+    // variables
+    const [fullname, setfullName] = useState('')
+    const [username, setUserName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+
+
+
+    // handler for registration 
+    const registrationHandler = async (e) => {
+        e.preventDefault()
+
+        try {
+            const data = await axios.post(`${backendServer}/registrationSubmit`, {
+                fullname, username, email, password
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true,
+            })
+            toast.success("registration successful")
+        } catch (error) {
+            toast.error("something went wrong")
+        }
+
+    }
+
+
     return (
-        <div className="login-page-container" style={{
-            backgroundImage: "url('/img/Login_Background.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-        }}>
+        <div className="login-page-container">
             <div className="content">
                 <div className="text">register</div>
 
-                <form className="registration-form">
+                <form className="registration-form" onSubmit={registrationHandler}>
                     {/* Email Field */}
                     <div className="field">
                         <span className="span">
@@ -30,10 +59,60 @@ export default function Registration() {
                                 />
                             </svg>
                         </span>
-                        <input required type="text" className="input" />
-                        <label className="label">Email or Phone</label>
+                        <input
+                            required
+                            type="text"
+                            onChange={(e) => setfullName(e.target.value)}
+                            className="input"
+                        />
+                        <label className="label">Full Name</label>
                     </div>
-
+                    <div className="field">
+                        <span className="span">
+                            <svg
+                                xmlSpace="preserve"
+                                viewBox="0 0 512 512"
+                                height="20"
+                                width="50"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fill="#595959"
+                                    d="M256 0c-74.439 0-135 60.561-135 135s60.561 135 135 135 135-60.561 135-135S330.439 0 256 0zM423.966 358.195C387.006 320.667 338.009 300 286 300h-60c-52.008 0-101.006 20.667-137.966 58.195C51.255 395.539 31 444.833 31 497c0 8.284 6.716 15 15 15h420c8.284 0 15-6.716 15-15 0-52.167-20.255-101.461-57.034-138.805z"
+                                />
+                            </svg>
+                        </span>
+                        <input
+                            required
+                            type="text"
+                            className="input"
+                            onChange={(e) => setUserName(e.target.value)}
+                        />
+                        <label className="label">Username</label>
+                    </div>
+                    <div className="field">
+                        <span className="span">
+                            <svg
+                                xmlSpace="preserve"
+                                viewBox="0 0 512 512"
+                                height="20"
+                                width="50"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fill="#595959"
+                                    d="M256 0c-74.439 0-135 60.561-135 135s60.561 135 135 135 135-60.561 135-135S330.439 0 256 0zM423.966 358.195C387.006 320.667 338.009 300 286 300h-60c-52.008 0-101.006 20.667-137.966 58.195C51.255 395.539 31 444.833 31 497c0 8.284 6.716 15 15 15h420c8.284 0 15-6.716 15-15 0-52.167-20.255-101.461-57.034-138.805z"
+                                />
+                            </svg>
+                        </span>
+                        <input
+                            required
+                            type="text"
+                            className="input"
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <label className="label">Email </label>
+                    </div>
                     {/* Password Field */}
                     <div className="field">
                         <span className="span">
@@ -50,7 +129,12 @@ export default function Registration() {
                                 />
                             </svg>
                         </span>
-                        <input required type="password" className="input" />
+                        <input
+                            required
+                            type="password"
+                            className="input"
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                         <label className="label">Password</label>
                     </div>
 
@@ -63,7 +147,7 @@ export default function Registration() {
                     </button>
 
                     <div className="sign-up">
-                        Already a member? <a href="#">Login Here</a>
+                        Already a member? <Link to="/login">Login Here</Link>
                     </div>
                 </form>
             </div>
