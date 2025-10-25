@@ -15,17 +15,19 @@ dotenv.config()
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+console.log("env", process.env.Frontend_URL)
+app.use(cors({
+  origin: process.env.Frontend_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE" ],
+  credentials: true
+}));
+
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.set("view engine", "ejs")
 app.use(express.json())
 app.use(userRouter)
 app.use(todoRouter)
-app.use(cors({
-  origin: process.env.Frontend_URL || "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
 
 
 app.use(ErrorHandler)
