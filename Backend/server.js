@@ -22,10 +22,11 @@ app.use(express.json())
 app.use(userRouter)
 app.use(todoRouter)
 app.use(cors({
-  origin:[],
-  methods:[],
-  credentials:true
+  origin: process.env.Frontend_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
 }));
+
 
 app.use(ErrorHandler)
 
