@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 import { SetToken } from '../utils/SetToken.js';
 
 
-
+// login controller
 export const postloginSubmit = async (req, res, next) => {
     try {
         const { username, password } = req.body;
@@ -35,6 +35,8 @@ export const postloginSubmit = async (req, res, next) => {
         return next(error)
     }
 }
+
+// registration controller
 export const postregistrationSubmit = async (req, res,next) => {
     try {
 
@@ -65,6 +67,7 @@ export const postregistrationSubmit = async (req, res,next) => {
     }
 }
 
+// profile view controller
 export const profile = async (req, res,next) => {
     try {
         const userProfile = await user.findById(req.user._id)
@@ -79,12 +82,14 @@ export const profile = async (req, res,next) => {
     }
 }
 
+// get All user Controller for adim dashboard
 export const getAllUsers = async (req, res,next) => {
     try {
         const AllUsers = await user.find({})
         console.log("all users: ", AllUsers)
 
         return res.status(200).json({
+            success:true,
             AllUsers
         })
 
@@ -94,7 +99,7 @@ export const getAllUsers = async (req, res,next) => {
     }
 }
 
-
+// logout controller
 export const getlogout = (req, res, next) => {
     try {
         res.cookie('isLoggedIn', null, {
@@ -110,4 +115,12 @@ export const getlogout = (req, res, next) => {
         error.statuscode = 500
         return next(error)
     }
+}
+
+export const verifyUser = (req,res)=>{
+    return res.status(200).jsonp({
+        success:true,
+        message:"User Authentication Complete ",
+        userId:req.user._id
+    })
 }
