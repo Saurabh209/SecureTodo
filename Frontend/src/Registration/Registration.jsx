@@ -21,7 +21,7 @@ export default function Registration() {
         e.preventDefault()
 
         try {
-            const data = await axios.post(`${backendServer}/registrationSubmit`, {
+            await axios.post(`${backendServer}/registrationSubmit`, {
                 fullname, username, email, password
             }, {
                 headers: {

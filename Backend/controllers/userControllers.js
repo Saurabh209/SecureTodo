@@ -117,6 +117,7 @@ export const getlogout = (req, res, next) => {
     }
 }
 
+// verify user controller
 export const verifyUser = (req,res)=>{
     return res.status(200).jsonp({
         success:true,

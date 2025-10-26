@@ -1,17 +1,22 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { backendServer } from "../App";
 import axios from "axios";
 import './Login.scss'
+import { Context } from "../main";
 
 export default function Login() {
+
+  const { isAuthenticated, setIsAuthenticated } = useContext(Context)
+
 
   // variables
   const [username, setUsername] = useState();
   const [password, setPassWord] = useState();
 
   // handler for login submit
+
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
@@ -19,14 +24,18 @@ export default function Login() {
         username, password
       }, {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true
+        withCredentials: true,
+        setIsAuthenticated: true,
       })
 
       toast.success(data.data.message)
     } catch (error) {
-      toast.error("incorrect username or password")
+      
+        toast.error("incorrect username or password")
     }
   }
+
+  if(isAuthenticated) return <Navigate to='/' />
 
   return (
     <div className="login-page-container" style={{
@@ -105,3 +114,6 @@ export default function Login() {
     </div>
   );
 }
+
+
+
