@@ -8,6 +8,7 @@ import { Context } from "../main";
 
 export default function Login() {
 
+  const navigate = useNavigate()
   const { isAuthenticated, setIsAuthenticated } = useContext(Context)
 
 
@@ -25,25 +26,22 @@ export default function Login() {
       }, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
-        setIsAuthenticated: true,
+
       })
 
       toast.success(data.data.message)
+      setIsAuthenticated(true)
+      navigate('/')
     } catch (error) {
-      
-        toast.error("incorrect username or password")
+
+      toast.error("incorrect username or password")
     }
   }
 
-  if(isAuthenticated) return <Navigate to='/' />
+
 
   return (
-    <div className="login-page-container" style={{
-      backgroundImage: "url('/img/Login_Background.jpg')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-    }}>
+    <div className="login-page-container"  >
       <div className="content">
         <div className="text">Login</div>
 

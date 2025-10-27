@@ -1,13 +1,15 @@
 .login-page-container {
   height: 100vh;
   display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   background-color: #e0e0e0;
 }
 
 .content {
-  font-family: "Inter", sans-serif;
 
+  font-family: "Inter", sans-serif;
   width: 330px;
   padding: 40px 30px;
   background: #dde1e7;

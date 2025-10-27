@@ -7,6 +7,7 @@ import Home from './Home/Home'
 import { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { Context } from './main'
+import CurrentStatusDevOnly from './CurrentStatusDevOnly'
 
 // backend url
 export const backendServer = "https://securetodo.onrender.com";
@@ -15,36 +16,28 @@ export const backendServer = "https://securetodo.onrender.com";
 function App() {
   const navigate = useNavigate();
 
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context)
+  const {
+    isAuthenticated, setIsAuthenticated,
+    user, setUser,
+    loading, setLoading } = useContext(Context)
 
 
-  // const verifyUser = async () => {
-  //   try {
-  //     const response = await axios.get(`${backendServer}/verifyUser`, { withCredentials: true });
-  //     if (response.data.success) {
-  //       setIsAuthenticated(true);
-  //       navigate('/');
-  //     } else {
-  //       setIsAuthenticated(false);
-  //     }
-  //   } catch (error) {
-  //     setIsAuthenticated(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   verifyUser();
-  // }, []);
+  useEffect(() => {
+    setLoading(true)
+    axios.get(`${backendServer}/profile`, { withCredentials: true, })
+      .then(res => {
+        setUser(res.data.userProfile);
+        setIsAuthenticated(true)
+      })
+      .catch(() => setIsAuthenticated(false))
+      .finally(() => { setLoading(false) })
+  }, [])
 
 
-
-
-
-
-  console.log("from app.jsx isAuthenticated:  ", isAuthenticated)
 
   return (
     <>
+      
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path='/registration' element={<Registration />} />
