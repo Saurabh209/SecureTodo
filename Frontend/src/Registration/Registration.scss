@@ -5,36 +5,33 @@
   background-color: #e0e0e0;
 }
 
-.content {
+.registration-content {
   font-family: "Inter", sans-serif;
   position: absolute;
-
   width: 330px;
   padding: 40px 30px;
-  background: #dde1e7;
   border-radius: 20px;
-  box-shadow: 5px 5px 17px #5c4e5d, -5px -5px 13px #eeb9dd;
 }
 
-.content .text {
+.registration-content .text {
   font-size: 33px;
   font-weight: 600;
   margin-bottom: 35px;
   color: #595959;
 }
 
-.field {
+.reg-field {
   height: 50px;
   width: 100%;
   display: flex;
   position: relative;
 }
 
-.field:nth-child(2) {
-  margin-top: 20px;
+.reg-field {
+  margin-top: 10px;
 }
 
-.field .input {
+.reg-field .input {
   height: 100%;
   width: 100%;
   padding-left: 45px;
@@ -47,18 +44,18 @@
   box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff73;
 }
 
-.field .input:focus {
+.reg-field .input:focus {
   box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff73;
 }
 
-.field .span {
+.reg-field .span {
   position: absolute;
   color: #595959;
   width: 50px;
   line-height: 55px;
 }
 
-.field .label {
+.reg-field .label {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -67,7 +64,7 @@
   color: #666666;
 }
 
-.field .input:valid ~ label {
+.reg-field .input:valid ~ label {
   opacity: 0;
 }
 

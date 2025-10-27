@@ -14,8 +14,9 @@ function CurrentStatusDevOnly() {
         setLoading(true)
         axios.get(`${backendServer}/logout`, { withCredentials: true, })
             .then(res => {
+                console.log("logout",res)
                 setIsAuthenticated(false);
-                toast.success(res.data.messege)
+                toast.success(res.data.messgege)
                 navigate('/login')
             })
             .catch(() => { setIsAuthenticated(true) })

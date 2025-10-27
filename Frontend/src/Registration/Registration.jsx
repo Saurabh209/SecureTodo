@@ -1,17 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useNavigate, Link, Navigate } from "react-router-dom";
 import axios from 'axios';
 import { backendServer } from "../App";
 import toast from 'react-hot-toast';
 import './Registration.scss'
+import { Context } from "../main";
 
 export default function Registration() {
-
+    const navigate = useNavigate()
     // variables
     const [fullname, setfullName] = useState('')
     const [username, setUserName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    const { isAuthenticated, setIsAuthenticated } = useContext(Context)
 
 
 
@@ -30,21 +33,23 @@ export default function Registration() {
                 withCredentials: true,
             })
             toast.success("registration successful")
+            setIsAuthenticated(true)
+            navigate('/')
         } catch (error) {
             toast.error("something went wrong")
         }
-
     }
 
+    if (isAuthenticated) return <Navigate to="/" />
 
     return (
         <div className="login-page-container">
-            <div className="content">
+            <div className="registration-content">
                 <div className="text">register</div>
 
                 <form className="registration-form" onSubmit={registrationHandler}>
                     {/* Email Field */}
-                    <div className="field">
+                    <div className="reg-field">
                         <span className="span">
                             <svg
                                 xmlSpace="preserve"
@@ -67,7 +72,7 @@ export default function Registration() {
                         />
                         <label className="label">Full Name</label>
                     </div>
-                    <div className="field">
+                    <div className="reg-field">
                         <span className="span">
                             <svg
                                 xmlSpace="preserve"
@@ -90,7 +95,7 @@ export default function Registration() {
                         />
                         <label className="label">Username</label>
                     </div>
-                    <div className="field">
+                    <div className="reg-field">
                         <span className="span">
                             <svg
                                 xmlSpace="preserve"
@@ -114,7 +119,7 @@ export default function Registration() {
                         <label className="label">Email </label>
                     </div>
                     {/* Password Field */}
-                    <div className="field">
+                    <div className="reg-field">
                         <span className="span">
                             <svg
                                 xmlSpace="preserve"

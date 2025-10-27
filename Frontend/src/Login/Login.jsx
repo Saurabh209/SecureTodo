@@ -39,15 +39,16 @@ export default function Login() {
   }
 
 
+  if (isAuthenticated) return <Navigate to='/' />
 
   return (
     <div className="login-page-container"  >
-      <div className="content">
+      <div className="login-content">
         <div className="text">Login</div>
 
         <form className="login-form" onSubmit={loginHandler}>
           {/* Email Field */}
-          <div className="field">
+          <div className="login-field">
             <span className="span">
               <svg
                 xmlSpace="preserve"
@@ -72,7 +73,7 @@ export default function Login() {
           </div>
 
           {/* Password Field */}
-          <div className="field">
+          <div className="login-field">
             <span className="span">
               <svg
                 xmlSpace="preserve"
