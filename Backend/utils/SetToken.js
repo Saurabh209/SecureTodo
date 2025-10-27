@@ -7,7 +7,7 @@ export const SetToken = async (res, currentUser) => {
     res.cookie('isLoggedIn', userAuthToken, {
         httpOnly: true,
         expires: new Date(Date.now() + 100 * 60 * 60 * 1000),
-        // secure: true,
+        secure: true,
         sameSite: "none"
     })
     return res.status(201).json({
