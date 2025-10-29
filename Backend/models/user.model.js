@@ -29,7 +29,7 @@ const newUsers = new mongoose.Schema(
     },
   },
   { 
-    timestamps: { createdAt: true, updatedAt: false } // only createdAt field
+    timestamps: { createdAt: true, updatedAt: false } 
   }
 );
 

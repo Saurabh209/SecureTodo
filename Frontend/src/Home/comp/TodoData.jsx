@@ -6,6 +6,7 @@ import { backendServer } from '../../App'
 import axios from 'axios'
 import SpotlightCard from '../../../ReactBitsComponents/SpotlightCard/SpotlightCard'
 import { Context } from '../../main'
+import toast from 'react-hot-toast'
 
 
 export default function TodoData() {
@@ -22,6 +23,9 @@ export default function TodoData() {
     const [title, setTitle] = useState()
     const [task, setTask] = useState()
     const [isCompleted, setIsCompleted] = useState()
+
+    const [theme, setTheme] = useState("green");
+    const [tasks, setTasks] = useState([{ name: "", isCompleted: false }]);
 
     const [isactive, setIsActive] = useState(false)
 
@@ -50,15 +54,33 @@ export default function TodoData() {
         }
     }
 
-    const handleConfirmChange = (e) => {
-        const value = e.target.value;
-        setIsCompleted(value === "yes");
+    const handleTaskChange = (index, e) => {
+        const newTasks = [...tasks];
+        newTasks[index][e.target.name] =
+            e.target.name === "isCompleted" ? e.target.checked : e.target.value;
+        setTasks(newTasks);
     };
 
-    const handleTodoSubmit = () => {
+    const addTask = () => {
+        setTasks([...tasks, { name: "", isCompleted: false }]);
+    };
+
+    const handlfteSubmit = async (e) => {
+        e.preventDefault();
+        const data = { title, theme, task: tasks };
+        try {
+            await axios.post(`${backendServer}/todo/create`, data, { withCredentials: true });
+            alert("Todo created successfully!");
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
+    const handleSubmit = () => {
         setLoading(true)
         axios
-            .post(`${backendServer}/todo/add`, { title, task, isCompleted }, { headers: { "Content-Type": "application/json" }, withCredentials: true })
+            .post(`${backendServer}/todo/add`,data, { headers: { "Content-Type": "application/json" }, withCredentials: true })
             .then((res) => {
                 toast.success(data.data.message)
             })
@@ -96,31 +118,51 @@ export default function TodoData() {
                     <>
                         <div onClick={handleTodo} className='exit-butotn-container'>X</div>
                         <div className='todo-add-form-container'>
-                            <form className='todo-add-form' onSubmit={handleTodoSubmit}>
-                                <div className="todo-add-field">
-                                    <label >Title</label>
-                                    <input
-                                        type='text'
-                                        required
-                                        onChange={(e) => { setTitle(e.target.value) }}
-                                    ></input>
+                            <form onSubmit={handleSubmit} className="todo-form">
+                                <input
+                                    type="text"
+                                    placeholder="Todo title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    required
+                                />
 
-                                    <label >Task</label>
-                                    <input
-                                        type='text'
-                                        required
-                                        onChange={(e) => { setTask(e.target.value) }}
-                                    ></input>
+                                <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+                                    <option value="green">Green</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="red">Red</option>
+                                </select>
 
+                                <div className="task-section">
+                                    <h4>Tasks</h4>
+                                    {tasks.map((task, index) => (
+                                        <div key={index} className="task-input">
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                placeholder="Task name"
+                                                value={task.name}
+                                                onChange={(e) => handleTaskChange(index, e)}
+                                                required
+                                            />
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    name="isCompleted"
+                                                    checked={task.isCompleted}
+                                                    onChange={(e) => handleTaskChange(index, e)}
+                                                />
+                                                Completed
+                                            </label>
+                                        </div>
+                                    ))}
 
-                                    <select id="confirm" name="confirm" onChange={handleConfirmChange}>
-                                        <option value="">-- Select an option --</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-
+                                    <button type="button" onClick={addTask}>
+                                        + Add Task
+                                    </button>
                                 </div>
-                                <button type='submit'>Add Todo</button>
+
+                                <button type="submit">Save Todo</button>
                             </form>
                         </div>
 
