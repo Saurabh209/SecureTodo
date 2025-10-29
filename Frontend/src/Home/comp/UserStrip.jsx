@@ -1,52 +1,84 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Context } from "../../main";
+import ShinyText from '../../../ReactBitsComponents/ShinyText'
+import TextPressure from '../../../ReactBitsComponents/TextPressure/TextPressure'
+import VariableProximity from "../../../ReactBitsComponents/VariableProximity/VariableProximity";
 
 
 
 
 
-function UserStrip({user}) {
-
+function UserStrip({ user }) {
+    const containerRef = useRef(null);
 
     return (
         <div className="userStrip"
         >
-            <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div className="strip-left" style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                 <img
-                    src="/logo192.png"
+                    src="/img/userProfile.png"
                     alt="App Logo"
                     style={{
                         width: "45px",
                         height: "45px",
                         borderRadius: "8px",
-                        background: "rgba(255,255,255,0.1)",
+                       
                         padding: "6px",
                     }}
                 />
-                <div>
+                <div className="strip-left-text">
                     <div
-                        style={{
-                            fontWeight: "bold",
-                            fontSize: "18px",
-                            letterSpacing: "0.5px",
-                        }}
+                        ref={containerRef}
+                        style={{ position: 'relative' }}
                     >
-                        Welcome back 👋
+                        <p>
+                            Welcome Back! {" "}
+                            <span>
+                                <VariableProximity
+                                    label={`${user?.username}`}
+                                    className={'variable-proximity-demo'}
+                                    fromFontVariationSettings="'wght' 200, 'opsz' 19"
+                                    toFontVariationSettings="'wght' 1000, 'opsz' 40"
+                                    containerRef={containerRef}
+                                    radius={100}
+                                    falloff='linear'
+                                />
+                            </span>
+                        </p>
+
                     </div>
+                    {/* <div style={{ position: 'relative', }}>
+                        <TextPressure
+                            text={`Welcome back`}
+                            flex={true}
+                            alpha={false}
+                            stroke={false}
+                            width={true}
+                            weight={true}
+                            italic={true}
+                            textColor="#ffffff"
+                            strokeColor="#ff0000"
+                            minFontSize={6}
+                        />
+                    </div> */}
                     <div
                         style={{
                             fontSize: "14px",
                             opacity: 0.85,
                         }}
                     >
-                        {user?.fullname
-                            ? `${user?.fullname}, ready to continue your session?`
-                            : "Loading user..."}
+                        <ShinyText
+                            text={`Ready to continue your session`}
+                            disabled={false}
+                            speed={3}
+                            className='custom-class'
+                        />
+
                     </div>
                 </div>
             </div>
 
-            <div
+            <div className="strip-right"
                 style={{
                     textAlign: "right",
                     fontSize: "14px",
@@ -54,8 +86,14 @@ function UserStrip({user}) {
                     lineHeight: "1.4",
                 }}
             >
-                <div style={{ fontWeight: "600" }}>@{user?.username}</div>
-                <div style={{ fontSize: "13px" }}>{user?.email}</div>
+
+                <div  style={{ fontWeight: "600" }}>@{user?.username}</div>
+                <ShinyText
+                    text={`${user?.email || "abc@gmail.com"}`}
+                    disabled={false}
+                    speed={4}
+                    className='custom-class'
+                />
             </div>
         </div>
     )

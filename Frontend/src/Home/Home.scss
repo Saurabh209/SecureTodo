@@ -1,13 +1,14 @@
 
 // strip css
 .home-parent {
-    background-color: #e0e0e0;
+    // background-color: #e0e0e0;
+        background-color: #e0e0e0;
     min-height: 100vh;
 
   .home-page-main-container {
     .userStrip {
 
-      background: linear-gradient(90deg, #1e1e1e, #2c2c2c);
+      background: linear-gradient(90deg, #1e1e1e, #414141);
       color: white;
       padding: 18px 25px;
       display: flex;
@@ -17,14 +18,26 @@
       margin: 35px 20px;
       font-family: monospace;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      .strip-left{
+        .strip-left-text{
+          div:nth-of-type(1){
+            margin-bottom: 6px;
+            p{
+              font-size: 18px;
+            }
+          }
+        }
+      }
     }
   }
 }
 
 .home-page-main-container{
-   
+  z-index: 50;  
 }
 
-
+.other-container{
+  z-index: 100;
+}
 
 

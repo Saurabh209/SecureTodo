@@ -38,7 +38,7 @@ function CurrentStatusDevOnly() {
             }}
         >
             <span style={{ fontWeight: "bold", letterSpacing: "0.5px" }}>
-                ⚙️ Dev Mode — Auth Status
+                ⚙️ Logo Here
             </span>
             <span
                 style={{
