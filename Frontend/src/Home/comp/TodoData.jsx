@@ -10,25 +10,21 @@ import toast from 'react-hot-toast'
 
 
 export default function TodoData() {
-    let defaultWidth = 260;
-    let defaultHeight = 350;
 
+    // states
     const [todoTask, setTodoTask] = useState(null)
-
     const { isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context)
-    // const [todoFormVisible, setTodoFormVisible] = useState(false)
-    // const [cardHeight, setCardHeight] = useState(defaultHeight)
-    // const [cardWidth, setCardWidth] = useState(defaultWidth)
 
     const [title, setTitle] = useState()
-    const [task, setTask] = useState()
-    const [isCompleted, setIsCompleted] = useState()
-
     const [theme, setTheme] = useState("green");
-    const [tasks, setTasks] = useState([{ name: "", isCompleted: false }]);
+    const [tasks, setTasks] = useState([{ name: "" }]);
+
+    const [currentTask, setCurrentTask] = useState("");
+    const [taskList, setTasklist] = useState([])
 
     const [isactive, setIsActive] = useState(false)
 
+    // useeffect for getting todo data
     useEffect(() => {
         console.log("hii")
         axios
@@ -45,7 +41,7 @@ export default function TodoData() {
     }, []);
 
 
-
+    // it handles todo form visibility 
     const handleTodo = () => {
         if (!isactive) {
             setIsActive(true)
@@ -54,33 +50,32 @@ export default function TodoData() {
         }
     }
 
-    const handleTaskChange = (index, e) => {
-        const newTasks = [...tasks];
-        newTasks[index][e.target.name] =
-            e.target.name === "isCompleted" ? e.target.checked : e.target.value;
-        setTasks(newTasks);
-    };
 
     const addTask = () => {
-        setTasks([...tasks, { name: "", isCompleted: false }]);
-    };
-
-    const handlfteSubmit = async (e) => {
-        e.preventDefault();
-        const data = { title, theme, task: tasks };
-        try {
-            await axios.post(`${backendServer}/todo/create`, data, { withCredentials: true });
-            alert("Todo created successfully!");
-        } catch (err) {
-            console.error(err);
+        const task = currentTask.trim()
+        if (task) {
+            setTasklist([...taskList, task])
+            setCurrentTask("")
         }
     };
 
+    console.log("TaskList: ", taskList)
 
-    const handleSubmit = () => {
+
+    // submit handler for todo submit
+    const handleSubmit = async (e) => {
         setLoading(true)
+        e.preventDefault();
+        const data = {
+            title,
+            theme,
+            task: taskList.map(task => ({
+                name: task,
+                isCompleted: false
+            }))
+        };
         axios
-            .post(`${backendServer}/todo/add`,data, { headers: { "Content-Type": "application/json" }, withCredentials: true })
+            .post(`${backendServer}/todo/add`, data, { headers: { "Content-Type": "application/json" }, withCredentials: true })
             .then((res) => {
                 toast.success(data.data.message)
             })
@@ -101,16 +96,13 @@ export default function TodoData() {
                 {/* skeleton loader should be here */}
                 <div className='todo-card  todo-add'><img src="/img/Add_Todo.png" alt="" /> </div>
             </> : <>  {todoTask?.map((items, index) => (
-                // <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(0, 229, 255, 0.2)">
                 <div key={index} className='todo-card'>
-
                     <div className='todo-title-container' ><p>{items?.title}</p></div>
-                    <div>{items.task}</div>
-                    <div>{items.isCompleted ? <>completed</> : <>not completed</>}</div>
-
+                    {items?.task?.map((items, index) => (
+                        <p>{items?.name},{items?.isCompleted ? "true":"false"}</p>
+                    ))}
 
                 </div>
-                // </SpotlightCard>
             ))}</>
             }
             <div className={`todo-add ${isactive ? "active" : ""}`} style={{ display: `${!isactive ? 'flex' : ''}` }}>
@@ -121,31 +113,38 @@ export default function TodoData() {
                             <form onSubmit={handleSubmit} className="todo-form">
                                 <input
                                     type="text"
+                                    className="todo-input"
                                     placeholder="Todo title"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     required
                                 />
 
-                                <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+                                <select
+                                    className="todo-select"
+                                    value={theme}
+                                    onChange={(e) => setTheme(e.target.value)}
+                                >
                                     <option value="green">Green</option>
                                     <option value="blue">Blue</option>
                                     <option value="red">Red</option>
                                 </select>
 
                                 <div className="task-section">
-                                    <h4>Tasks</h4>
-                                    {tasks.map((task, index) => (
-                                        <div key={index} className="task-input">
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                placeholder="Task name"
-                                                value={task.name}
-                                                onChange={(e) => handleTaskChange(index, e)}
-                                                required
-                                            />
-                                            <label>
+                                    <h4 className="task-heading">Tasks</h4>
+
+                                    <div className="task-input">
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            className="task-name"
+                                            placeholder="Task name"
+                                            value={currentTask}
+
+                                            onChange={(e) => setCurrentTask(e.target.value)}
+
+                                        />
+                                        {/* <label className="task-check">
                                                 <input
                                                     type="checkbox"
                                                     name="isCompleted"
@@ -153,17 +152,20 @@ export default function TodoData() {
                                                     onChange={(e) => handleTaskChange(index, e)}
                                                 />
                                                 Completed
-                                            </label>
-                                        </div>
-                                    ))}
+                                            </label> */}
+                                    </div>
 
-                                    <button type="button" onClick={addTask}>
+
+                                    <button type="button" className="add-task-btn" onClick={addTask}>
                                         + Add Task
                                     </button>
                                 </div>
 
-                                <button type="submit">Save Todo</button>
+                                <button type="submit" className="save-todo-btn">
+                                    Save Todo
+                                </button>
                             </form>
+
                         </div>
 
 
