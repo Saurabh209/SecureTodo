@@ -3,27 +3,35 @@ import { todoTask } from "../models/todo.model.js"
 
 export const postTodo = async (req, res) => {
     try {
-        console.log("starting of task creation")
+        const { title, task, theme } = req.body;
+
+        if (!title || !task?.length) {
+            return res.status(400).json({
+                success: false,
+                message: "Title and at least one task are required.",
+            });
+        }
+
         const newTask = await todoTask.create({
-            title: req.body.title,
-            task: req.body.task,
-            isCompleted: req.body.isCompleted,
-            userAssigned: req.user._id
-        })
-        console.log("new task: ",newTask)
+            title,
+            task,
+            theme: theme || "green",
+            userAssigned: req.user._id,
+        });
         res.status(201).json({
             success: true,
-            messege: "Task added successfullly",
-            newTask
-        })
+            message: "Task added successfully.",
+            newTask,
+        });
     } catch (error) {
+        console.error("Error creating todo:", error);
         res.status(500).json({
-            success:false,
-            messgege:"Internal Server Error"
-        })
+            success: false,
+            message: "Internal Server Error",
+        });
     }
+};
 
-}
 
 export const getTodo = async (req, res) => {
     const currentUser = req.user._id
