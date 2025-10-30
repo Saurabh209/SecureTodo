@@ -14,7 +14,7 @@ function CurrentStatusDevOnly() {
         setLoading(true)
         axios.get(`${backendServer}/logout`, { withCredentials: true, })
             .then(res => {
-                console.log("logout",res)
+                console.log("logout", res)
                 setIsAuthenticated(false);
                 toast.success(res.data.messgege)
                 navigate('/login')
@@ -38,7 +38,7 @@ function CurrentStatusDevOnly() {
             }}
         >
             <span style={{ fontWeight: "bold", letterSpacing: "0.5px" }}>
-                ⚙️ Logo Here
+                ⚙️ SECURE TODO
             </span>
             <span
                 style={{

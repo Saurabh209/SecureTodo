@@ -19,9 +19,10 @@ export default function TodoData() {
     const [todoTask, setTodoTask] = useState(null)
     const { isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context)
 
-    const [title, setTitle] = useState()
+    const [todoLoading, setTodoLoading] = useState(false)
+
+    const [title, setTitle] = useState("")
     const [theme, setTheme] = useState("green");
-    const [tasks, setTasks] = useState([{ name: "" }]);
 
     const [currentTask, setCurrentTask] = useState("");
     const [taskList, setTasklist] = useState([])
@@ -30,7 +31,6 @@ export default function TodoData() {
 
     // useeffect for getting todo data
     useEffect(() => {
-        console.log("hii")
         axios
             .get(`${backendServer}/todo/view`, { withCredentials: true })
             .then((res) => {
@@ -63,7 +63,6 @@ export default function TodoData() {
         }
     };
 
-    console.log("TaskList: ", taskList)
 
 
     // submit handler for todo submit
@@ -121,6 +120,7 @@ export default function TodoData() {
             .replace(',', '')
             .replace(/(\d{2}) (\w{3}) (\d{4})/, '$1 $2 $3,');
     }
+    
     return (
         <div className='todoCardContainer'>
             {!todoTask ? <>
@@ -129,8 +129,8 @@ export default function TodoData() {
             </> : <>  {todoTask?.map((items, index) => (
                 <div key={index} className='todo-card'
                 //  style={{ backgroundColor: handleTodoListBg(items?.theme) }}
-                 
-                 >
+
+                >
                     <div
                         className='todo-title-container'
                         style={{ backgroundColor: handleTitleColor(items.theme) }} >
@@ -139,7 +139,7 @@ export default function TodoData() {
                                 label={`${items?.title}`}
                                 className={'variable-proximity-demo'}
                                 fromFontVariationSettings="'wght' 400, 'opsz' 19"
-                                toFontVariationSettings="'wght' 800, 'opsz' 40"
+                                toFontVariationSettings="'wght' 1400, 'opsz' 40"
                                 containerRef={containerRef}
                                 radius={100}
                                 falloff='linear'
@@ -150,17 +150,24 @@ export default function TodoData() {
                     </div>
                     <div className='todo-list-container'>
                         {items?.task?.map((items, index) => (
-                            <div className='single-todo-container' >
-                                <p >
+                            <div key={index} className='single-todo-container' >
+                                {items?.isCompleted ? <>
+                                    <span className='completedTask'>
+                                        {items?.name}
+                                    </span>
+                                </> : <>
+                                    <span >
 
-                                    <ShinyText
-                                        text={`${items?.name}`}
-                                        disabled={false}
-                                        speed={3}
-                                        className='custom-class'
-                                    />
+                                        <ShinyText
+                                            text={`${items?.name}`}
+                                            disabled={false}
+                                            speed={3}
+                                            className='custom-class'
+                                        />
 
-                                </p>
+                                    </span>
+                                </>}
+
                                 <div className='todo-delete-completed-button-container'>
                                     <img src="/img/delete_todo.png" alt="" />
                                 </div>
@@ -233,7 +240,7 @@ export default function TodoData() {
                                 </div>
 
                                 <button type="submit" className="save-todo-btn">
-                                    Save Todo
+                                    {todoLoading ? "Saving" : "Save Todo"}
                                 </button>
                             </form>
 

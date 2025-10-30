@@ -33,24 +33,27 @@ function App() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontFamily: "monospace",
-          color: "#888",
-        }}
-      >
-        Verifying session...
+      // <div
+      //   style={{
+      //     height: "100vh",
+      //     display: "flex",
+      //     justifyContent: "center",
+      //     alignItems: "center",
+      //     fontFamily: "monospace",
+      //     color: "#888",
+      //   }}
+      // >
+      //   Verifying session...
+      // </div>
+      <div className="loading-screen">
+        <span className="loading-text">Verifying session</span>
+        <span className="loading-dots">...</span>
       </div>
     );
   }
 
   return (
     <>
-
       <Routes>
         <Route
           path="/login"
@@ -63,7 +66,7 @@ function App() {
         />
       </Routes>
 
-      <Toaster  />
+      <Toaster />
     </>
   );
 }

@@ -4,6 +4,7 @@ import './index.scss'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { createContext } from 'react'
+import ClickSpark from '../ReactBitsComponents/ClickSpark/ClickSpark.jsx'
 
 
 export const Context = createContext();
@@ -17,7 +18,13 @@ const AppWrapper = () => {
     <Context.Provider value={{
       isAuthenticated, setIsAuthenticated, loading, setLoading
     }}>
-      <App />
+      <ClickSpark sparkColor='#565656ff'
+        sparkSize={10}
+        sparkRadius={15}
+        sparkCount={8}
+        duration={400}>
+        <App />
+      </ClickSpark>
     </Context.Provider>
   )
 }
