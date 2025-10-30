@@ -33,7 +33,7 @@ export default function Home() {
 
                 <CurrentStatusDevOnly />
 
-                <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(255, 255, 255, 0.15)">
+                <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(255, 255, 255, 0.23)">
                     <div className="home-page-main-container">
                         {loading ? (
                             <div

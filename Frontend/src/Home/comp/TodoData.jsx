@@ -7,9 +7,13 @@ import axios from 'axios'
 import SpotlightCard from '../../../ReactBitsComponents/SpotlightCard/SpotlightCard'
 import { Context } from '../../main'
 import toast from 'react-hot-toast'
+import VariableProximity from '../../../ReactBitsComponents/VariableProximity/VariableProximity'
+import { useRef } from 'react'
+import ShinyText from '../../../ReactBitsComponents/ShinyText'
 
 
 export default function TodoData() {
+    const containerRef = useRef(null);
 
     // states
     const [todoTask, setTodoTask] = useState(null)
@@ -88,19 +92,86 @@ export default function TodoData() {
 
     }
 
+    const handleTodoListBg = (color) => {
+        if (color === "red") return "#ffebee"
+        if (color === "blue") return "#bbdefb"
+        if (color === "green") return "#b9f6ca"
+    }
 
+    const handleTitleColor = (color) => {
+        if (color === "red") return "#ffb3b3"
+        if (color === "blue") return "#a8d8ff"
+        if (color === "green") return "#a8e6a1"
+    }
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        };
+
+        // Example: 17 Feb 2025, 13:23
+        return date
+            .toLocaleString('en-GB', options)
+            .replace(',', '')
+            .replace(/(\d{2}) (\w{3}) (\d{4})/, '$1 $2 $3,');
+    }
     return (
         <div className='todoCardContainer'>
             {!todoTask ? <>
                 {/* skeleton loader should be here */}
                 <div className='todo-card  todo-add'><img src="/img/Add_Todo.png" alt="" /> </div>
             </> : <>  {todoTask?.map((items, index) => (
-                <div key={index} className='todo-card'>
-                    <div className='todo-title-container' ><p>{items?.title}</p></div>
-                    {items?.task?.map((items, index) => (
-                        <p>{items?.name},{items?.isCompleted ? "true":"false"}</p>
-                    ))}
+                <div key={index} className='todo-card'
+                //  style={{ backgroundColor: handleTodoListBg(items?.theme) }}
+                 
+                 >
+                    <div
+                        className='todo-title-container'
+                        style={{ backgroundColor: handleTitleColor(items.theme) }} >
+                        <h2 ref={containerRef}>
+                            <VariableProximity
+                                label={`${items?.title}`}
+                                className={'variable-proximity-demo'}
+                                fromFontVariationSettings="'wght' 400, 'opsz' 19"
+                                toFontVariationSettings="'wght' 800, 'opsz' 40"
+                                containerRef={containerRef}
+                                radius={100}
+                                falloff='linear'
+                            />
+
+                        </h2>
+
+                    </div>
+                    <div className='todo-list-container'>
+                        {items?.task?.map((items, index) => (
+                            <div className='single-todo-container' >
+                                <p >
+
+                                    <ShinyText
+                                        text={`${items?.name}`}
+                                        disabled={false}
+                                        speed={3}
+                                        className='custom-class'
+                                    />
+
+                                </p>
+                                <div className='todo-delete-completed-button-container'>
+                                    <img src="/img/delete_todo.png" alt="" />
+                                </div>
+                                {/* <p>{items?.isCompleted ? "true" : "false"}</p> */}
+                            </div>
+
+                        ))}
+                    </div>
+                    <div className='todo-info-container'>
+                        <p>{formatDate(items?.createdAt)}</p>
+                    </div>
 
                 </div>
             ))}</>

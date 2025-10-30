@@ -30,7 +30,7 @@ function App() {
       });
   }, []);
 
-  // 🧠 Don’t render routes until loading is done
+
   if (loading) {
     return (
       <div
