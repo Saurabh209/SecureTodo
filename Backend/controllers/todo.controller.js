@@ -42,8 +42,6 @@ export const getTodo = async (req, res) => {
 }
 
 
-
-
 export const postDeleteTask = async (req, res) => {
     try {
         const { parentId, taskId } = req.body;
@@ -86,3 +84,19 @@ export const postDeleteTask = async (req, res) => {
     }
 };
 
+
+export const postUpdateTask = async (req, res) => {
+    try {
+        const { parentId, taskId } = req.body;
+        const data = await todoTask.findById({ _id: parentId })
+
+        const task = data.task.id(taskId);
+    
+        task.isCompleted = !task.isCompleted;
+
+        await data.save();
+        res.status(200).json({ data })
+    } catch (error) {
+        res.status(404).send("errorrr")
+    }
+}

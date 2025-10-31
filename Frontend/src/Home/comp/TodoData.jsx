@@ -119,12 +119,12 @@ export default function TodoData() {
     }
 
 
-    const handleTodoRemove = async ( parentId,taskId) => {
+    const handleTodoRemove = async (parentId, taskId) => {
 
         try {
             setLoading(true);
-            const data = {  parentId,taskId };
-            console.log(parentId,taskId)
+            const data = { parentId, taskId };
+            console.log(parentId, taskId)
             const res = await axios.post(`${backendServer}/todo/deleteTask`, data, {
                 withCredentials: true,
             });
@@ -144,6 +144,23 @@ export default function TodoData() {
 
     // console.log("parent: ", parentId)
     // console.log("child: ", childId)
+
+    const handleSingleTaskUpdate = async (parentId, taskId) => {
+        console.log("parentId: ", parentId)
+        console.log("taskIdL: ", taskId)
+
+        try {
+            setLoading(true)
+            const data = { parentId, taskId }
+            await axios.post(`${backendServer}/todo/updateTask`, data, { withCredentials: true })
+
+        } catch (error) {
+            console.error("Error updating task:", error);
+        } finally {
+            setLoading(false)
+        }
+
+    }
 
     return (
         <div className='todoCardContainer'>
@@ -176,6 +193,7 @@ export default function TodoData() {
                         {items?.task?.map((item, index) => (
                             <div
                                 key={index}
+                                onDoubleClick={() => { handleSingleTaskUpdate(items?._id, item?._id) }}
                                 className='single-todo-container'
 
                             >
