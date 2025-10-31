@@ -41,16 +41,31 @@ export const getTodo = async (req, res) => {
     res.json(allTodo)
 }
 
-// export const postDeleteTask = async (req, res) => {
-//     try {
-//         const { _id } = req.body;
-//         console.log("before deleting task")
-//         const deletedTask = await todoTask.deleteOne({ _id: _id });
-//         console.log("after deleting task")
-//         console.log(deletedTask)
-//         res.status(200).json({ success: true, message: "Task deleted successfully" });
-//     } catch (error) {
-//         console.error("Delete failed:", error);
-//         res.status(500).json({ success: false, message: "Internal server error" });
-//     }
-// };
+export const postDeleteTask = async (req, res) => {
+    try {
+        const { parentId, taskId } = req.body; 
+        console.log("Attempting to delete task:", taskId, "from todo:", parentId);
+
+        const updatedTodo = await todoTask.findByIdAndUpdate(
+            parentId,
+            { $pull: { task: { _id: taskId } } }, 
+            { new: true }
+        );
+
+        if (!updatedTodo) {
+            return res.status(404).json({ success: false, message: "Todo not found" });
+        }
+
+        console.log("Task deleted successfully");
+        res.status(200).json({
+            success: true,
+            message: "Task deleted successfully",
+            updatedTodo,
+        });
+    } catch (error) {
+        console.error("Delete failed:", error);
+        res
+            .status(500)
+            .json({ success: false, message: "Internal server error", error });
+    }
+};
