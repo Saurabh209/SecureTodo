@@ -1,5 +1,5 @@
 import { todoTask } from "../models/todo.model.js"
-
+import mongoose from "mongoose";
 
 export const postTodo = async (req, res) => {
     try {
@@ -41,14 +41,27 @@ export const getTodo = async (req, res) => {
     res.json(allTodo)
 }
 
+
+
+
 export const postDeleteTask = async (req, res) => {
     try {
-        const { parentId, taskId } = req.body; 
-        console.log("Attempting to delete task:", taskId, "from todo:", parentId);
+        const { parentId, taskId } = req.body;
+        console.log(parentId, taskId)
 
+        // sanity check
+        if (!parentId || !taskId) {
+            return res.status(400).json({ success: false, message: "Missing IDs" });
+        }
+
+        // convert both IDs to ObjectId
+        const parentObjectId = new mongoose.Types.ObjectId(parentId);
+        const taskObjectId = new mongoose.Types.ObjectId(taskId);
+
+        // delete nested task
         const updatedTodo = await todoTask.findByIdAndUpdate(
-            parentId,
-            { $pull: { task: { _id: taskId } } }, 
+            parentObjectId,
+            { $pull: { task: { _id: taskObjectId } } },
             { new: true }
         );
 
@@ -56,16 +69,20 @@ export const postDeleteTask = async (req, res) => {
             return res.status(404).json({ success: false, message: "Todo not found" });
         }
 
-        console.log("Task deleted successfully");
+        console.log("✅ Task deleted, updatedTodo:", updatedTodo);
         res.status(200).json({
             success: true,
             message: "Task deleted successfully",
             updatedTodo,
         });
+
     } catch (error) {
-        console.error("Delete failed:", error);
-        res
-            .status(500)
-            .json({ success: false, message: "Internal server error", error });
+        console.error("💥 Delete failed:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error: error.message,
+        });
     }
 };
+
