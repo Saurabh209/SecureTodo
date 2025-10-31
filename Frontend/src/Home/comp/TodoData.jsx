@@ -162,6 +162,28 @@ export default function TodoData() {
 
     }
 
+    const [confirmTodoCardDeleteButtonVisibility, setConfirmTodoCardDeleteButtonVisibility] = useState(false)
+
+
+    const HandleTodoDeleteOne = (Id) => {
+
+        async function HandleTodoDelete(Id) {
+            try {
+                setLoading(true);
+                await axios.post(`${backendServer}/todo/deleteTodoCard`, Id, { withCredentials: true })
+            } catch (error) {
+
+            } finally {
+                setLoading(false)
+            }
+        }
+        HandleTodoDelete(Id)
+    }
+
+    const HandleImageVisibility = () => {
+        setConfirmTodoCardDeleteButtonVisibility(true)
+    }
+
     return (
         <div className='todoCardContainer'>
             {!todoTask ? <>
@@ -175,7 +197,8 @@ export default function TodoData() {
                     <div
                         className='todo-title-container'
                         style={{ backgroundColor: handleTitleColor(items.theme) }} >
-                        <h2 ref={containerRef}>
+                        <h2
+                            ref={containerRef}>
                             <VariableProximity
                                 label={`${items?.title}`}
                                 className={'variable-proximity-demo'}
@@ -187,6 +210,27 @@ export default function TodoData() {
                             />
 
                         </h2>
+                        <div
+                            className='task-delete-button'
+                            onMouseLeave={() => setConfirmTodoCardDeleteButtonVisibility(false)}
+                        // style={{ width: confirmTodoCardDeleteButtonVisibility ? "100%" : "", transitionDuration:".4s" }}
+
+                        >
+                            <img
+                                onClick={() => HandleImageVisibility()}
+                                src="/img/delete_todo.png" alt="" />
+                            {confirmTodoCardDeleteButtonVisibility &&
+                                <p
+                                    onClick={() => HandleTodoDeleteOne(items?._id)}
+                                    style={{
+                                        color: "#353535ff",
+                                        cursor: "pointer",
+                                        fontWeight: "bold",
+                                    }}>Are you sure ?</p>
+
+                            }
+                        </div>
+
 
                     </div>
                     <div className='todo-list-container'>

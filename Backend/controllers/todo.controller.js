@@ -91,12 +91,25 @@ export const postUpdateTask = async (req, res) => {
         const data = await todoTask.findById({ _id: parentId })
 
         const task = data.task.id(taskId);
-    
+
         task.isCompleted = !task.isCompleted;
 
         await data.save();
         res.status(200).json({ data })
     } catch (error) {
         res.status(404).send("errorrr")
+    }
+}
+
+export const postDeleteTodoCard = async (req, res) => {
+    try {
+        const { Id } = req.body
+        const data = await todoTask.deleteOne({ _id: Id })
+        res.status(200).json({
+            success: true,
+            message: "Todo Deleted Successfully"
+        })
+    } catch (error) {
+        console.log("something wrong: ", error)
     }
 }

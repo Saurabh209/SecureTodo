@@ -21,7 +21,36 @@
     }
 
     .todo-title-container {
+      position: relative;
+      overflow: hidden;
+      transition-duration: 0.4s;
       // border-bottom: 1px solid black;
+      &:hover {
+        .task-delete-button {
+          top: -40px;
+        }
+      }
+      .task-delete-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: red;
+        
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        right: 0px;
+        top: -50px;
+        transition-duration: 0.4s;
+        &:hover {
+          top: 0px;
+        }
+        img {
+          transition-duration: .4s;
+          height: 22px;
+          width: auto;
+        }
+      }
       h2 {
         cursor: default;
         padding: 10px 5px;
