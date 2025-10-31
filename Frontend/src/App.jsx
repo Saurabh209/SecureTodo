@@ -7,6 +7,7 @@ import Login from "./Login/Login";
 import Registration from "./Registration/Registration";
 import Home from "./Home/Home";
 import CurrentStatusDevOnly from "./CurrentStatusDevOnly";
+import ShinyText from "../ReactBitsComponents/ShinyText";
 
 // backend url
 export const backendServer = "https://securetodo.onrender.com";
@@ -46,8 +47,14 @@ function App() {
       //   Verifying session...
       // </div>
       <div className="loading-screen">
-        <span className="loading-text">Verifying session</span>
-        <span className="loading-dots">...</span>
+        <ShinyText
+          text={`Verifying session...`}
+          disabled={false}
+          speed={3}
+          className='custom-class'
+        />
+        {/* <span className="loading-text">Verifying session</span>
+        <span className="loading-dots">...</span> */}
       </div>
     );
   }

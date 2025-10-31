@@ -32,6 +32,7 @@
     .todo-list-container {
       display: flex;
       flex-direction: column;
+      transition-duration: 0.4s;
       // padding: 6px 6px;
 
       .single-todo-container {
@@ -70,12 +71,11 @@
             width: auto;
           }
         }
-        .completedTask{
+        .completedTask {
           text-decoration: line-through;
           color: #9f9f9f;
         }
         span {
-         
           padding: 0px 10px;
           width: 100%;
           line-height: 30px;

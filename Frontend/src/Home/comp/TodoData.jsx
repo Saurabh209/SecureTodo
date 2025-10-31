@@ -17,9 +17,7 @@ export default function TodoData() {
 
     // states
     const [todoTask, setTodoTask] = useState(null)
-    const { isAuthenticated, setIsAuthenticated, loading, setLoading } = useContext(Context)
-
-    const [todoLoading, setTodoLoading] = useState(false)
+    const { loading, setLoading } = useContext(Context)
 
     const [title, setTitle] = useState("")
     const [theme, setTheme] = useState("green");
@@ -28,6 +26,13 @@ export default function TodoData() {
     const [taskList, setTasklist] = useState([])
 
     const [isactive, setIsActive] = useState(false)
+
+
+    const [currentTaskId, setCurrentTaskId] = useState(null)
+    const [currentTodoId, setCurrentTodoId] = useState(null)
+    const [singleTodoDelete, setSingleTodoDelete] = useState()
+
+
 
     // useeffect for getting todo data
     useEffect(() => {
@@ -90,19 +95,11 @@ export default function TodoData() {
             });
 
     }
-
-    const handleTodoListBg = (color) => {
-        if (color === "red") return "#ffebee"
-        if (color === "blue") return "#bbdefb"
-        if (color === "green") return "#b9f6ca"
-    }
-
     const handleTitleColor = (color) => {
         if (color === "red") return "#ffb3b3"
         if (color === "blue") return "#a8d8ff"
         if (color === "green") return "#a8e6a1"
     }
-
     function formatDate(dateString) {
         const date = new Date(dateString);
         const options = {
@@ -120,7 +117,34 @@ export default function TodoData() {
             .replace(',', '')
             .replace(/(\d{2}) (\w{3}) (\d{4})/, '$1 $2 $3,');
     }
-    
+
+
+    const handleTodoRemove = async ( parentId,taskId) => {
+
+        try {
+            setLoading(true);
+            const data = {  parentId,taskId };
+            console.log(parentId,taskId)
+            const res = await axios.post(`${backendServer}/todo/deleteTask`, data, {
+                withCredentials: true,
+            });
+
+            if (res.data.success) {
+                console.log("Task deleted:", taskId);
+                // Optional: update UI immediately (remove task from state)
+            } else {
+                console.warn("Delete failed:", res.data.message);
+            }
+        } catch (error) {
+            console.error("Error deleting task:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // console.log("parent: ", parentId)
+    // console.log("child: ", childId)
+
     return (
         <div className='todoCardContainer'>
             {!todoTask ? <>
@@ -149,17 +173,21 @@ export default function TodoData() {
 
                     </div>
                     <div className='todo-list-container'>
-                        {items?.task?.map((items, index) => (
-                            <div key={index} className='single-todo-container' >
-                                {items?.isCompleted ? <>
+                        {items?.task?.map((item, index) => (
+                            <div
+                                key={index}
+                                className='single-todo-container'
+
+                            >
+                                {item?.isCompleted ? <>
                                     <span className='completedTask'>
-                                        {items?.name}
+                                        {item?.name}
                                     </span>
                                 </> : <>
                                     <span >
 
                                         <ShinyText
-                                            text={`${items?.name}`}
+                                            text={`${item?.name}`}
                                             disabled={false}
                                             speed={3}
                                             className='custom-class'
@@ -168,7 +196,12 @@ export default function TodoData() {
                                     </span>
                                 </>}
 
-                                <div className='todo-delete-completed-button-container'>
+                                <div
+                                    className='todo-delete-completed-button-container'
+                                    onClick={() => handleTodoRemove(items?._id, item?._id)}
+                                    style={{ left: currentTodoId === item?._id ? "0px" : "", width: currentTodoId === items?._id ? "100%" : "" }}
+
+                                >
                                     <img src="/img/delete_todo.png" alt="" />
                                 </div>
                                 {/* <p>{items?.isCompleted ? "true" : "false"}</p> */}
@@ -201,6 +234,7 @@ export default function TodoData() {
                                 <select
                                     className="todo-select"
                                     value={theme}
+
                                     onChange={(e) => setTheme(e.target.value)}
                                 >
                                     <option value="green">Green</option>
@@ -240,7 +274,8 @@ export default function TodoData() {
                                 </div>
 
                                 <button type="submit" className="save-todo-btn">
-                                    {todoLoading ? "Saving" : "Save Todo"}
+                                    {loading ? "Saving" : "Save Todo"}
+
                                 </button>
                             </form>
 
