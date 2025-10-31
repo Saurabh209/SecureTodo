@@ -165,20 +165,20 @@ export default function TodoData() {
     const [confirmTodoCardDeleteButtonVisibility, setConfirmTodoCardDeleteButtonVisibility] = useState(false)
 
 
-    const HandleTodoDeleteOne = (Id) => {
 
-        async function HandleTodoDelete(Id) {
-            try {
-                setLoading(true);
-                await axios.post(`${backendServer}/todo/deleteTodoCard`, Id, { withCredentials: true })
-            } catch (error) {
 
-            } finally {
-                setLoading(false)
-            }
+    async function HandleTodoDelete(Id) {
+        try {
+            setLoading(true);
+            await axios.post(`${backendServer}/todo/deleteTodoCard`, {Id}, { withCredentials: true })
+        } catch (error) {
+
+        } finally {
+            setLoading(false)
         }
-        HandleTodoDelete(Id)
     }
+
+
 
     const HandleImageVisibility = () => {
         setConfirmTodoCardDeleteButtonVisibility(true)
@@ -221,7 +221,7 @@ export default function TodoData() {
                                 src="/img/delete_todo.png" alt="" />
                             {confirmTodoCardDeleteButtonVisibility &&
                                 <p
-                                    onClick={() => HandleTodoDeleteOne(items?._id)}
+                                    onClick={() => HandleTodoDelete(items?._id)}
                                     style={{
                                         color: "#353535ff",
                                         cursor: "pointer",
@@ -251,7 +251,7 @@ export default function TodoData() {
                                         <ShinyText
                                             text={`${item?.name}`}
                                             disabled={false}
-                                            speed={3}
+                                            speed={5}
                                             className='custom-class'
                                         />
 
