@@ -8,7 +8,8 @@ export const SetToken = async (res, currentUser) => {
         httpOnly: true,
         expires: new Date(Date.now() + 100 * 60 * 60 * 1000),
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
+         path: "/"
     })
     return res.status(201).json({
         success: true,
