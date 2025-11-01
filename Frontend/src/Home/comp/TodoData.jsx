@@ -32,6 +32,7 @@ export default function TodoData() {
     const [currentTodoId, setCurrentTodoId] = useState(null)
     const [singleTodoDelete, setSingleTodoDelete] = useState()
 
+    const [confirmTodoCardDeleteButtonVisibility, setConfirmTodoCardDeleteButtonVisibility] = useState(false)
 
 
     // useeffect for getting todo data
@@ -59,7 +60,7 @@ export default function TodoData() {
         }
     }
 
-
+    // fxn for adding task to todo
     const addTask = () => {
         const task = currentTask.trim()
         if (task) {
@@ -102,21 +103,27 @@ export default function TodoData() {
     }
     function formatDate(dateString) {
         const date = new Date(dateString);
+
         const options = {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false
+            weekday: "short", // adds Mon, Tue etc.
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
         };
 
-        // Example: 17 Feb 2025, 13:23
+        // Example output: "Mon · 27 Oct 2025 · 14:36"
         return date
-            .toLocaleString('en-GB', options)
-            .replace(',', '')
-            .replace(/(\d{2}) (\w{3}) (\d{4})/, '$1 $2 $3,');
+            .toLocaleString("en-GB", options)
+            .replace(",", "")
+            .replace(
+                /(\w{3}) (\d{2}) (\w{3}) (\d{4}) (\d{2}):(\d{2})/,
+                "$1 · $2 $3 $4 · $5:$6"
+            );
     }
+
 
 
     const handleTodoRemove = async (parentId, taskId) => {
@@ -162,15 +169,10 @@ export default function TodoData() {
 
     }
 
-    const [confirmTodoCardDeleteButtonVisibility, setConfirmTodoCardDeleteButtonVisibility] = useState(false)
-
-
-
-
     async function HandleTodoDelete(Id) {
         try {
             setLoading(true);
-            await axios.post(`${backendServer}/todo/deleteTodoCard`, {Id}, { withCredentials: true })
+            await axios.post(`${backendServer}/todo/deleteTodoCard`, { Id }, { withCredentials: true })
         } catch (error) {
 
         } finally {
@@ -178,112 +180,146 @@ export default function TodoData() {
         }
     }
 
-
-
     const HandleImageVisibility = () => {
         setConfirmTodoCardDeleteButtonVisibility(true)
     }
 
     return (
         <div className='todoCardContainer'>
-            {!todoTask ? <>
-                {/* skeleton loader should be here */}
-                <div className='todo-card  todo-add'><img src="/img/Add_Todo.png" alt="" /> </div>
-            </> : <>  {todoTask?.map((items, index) => (
-                <div key={index} className='todo-card'
-                //  style={{ backgroundColor: handleTodoListBg(items?.theme) }}
-
-                >
-                    <div
-                        className='todo-title-container'
-                        style={{ backgroundColor: handleTitleColor(items.theme) }} >
-                        <h2
-                            ref={containerRef}>
-                            <VariableProximity
-                                label={`${items?.title}`}
-                                className={'variable-proximity-demo'}
-                                fromFontVariationSettings="'wght' 400, 'opsz' 19"
-                                toFontVariationSettings="'wght' 1400, 'opsz' 40"
-                                containerRef={containerRef}
-                                radius={100}
-                                falloff='linear'
-                            />
-
-                        </h2>
-                        <div
-                            className='task-delete-button'
-                            onMouseLeave={() => setConfirmTodoCardDeleteButtonVisibility(false)}
-                        // style={{ width: confirmTodoCardDeleteButtonVisibility ? "100%" : "", transitionDuration:".4s" }}
-
-                        >
-                            <img
-                                onClick={() => HandleImageVisibility()}
-                                src="/img/delete_todo.png" alt="" />
-                            {confirmTodoCardDeleteButtonVisibility &&
-                                <p
-                                    onClick={() => HandleTodoDelete(items?._id)}
-                                    style={{
-                                        color: "#353535ff",
-                                        cursor: "pointer",
-                                        fontWeight: "bold",
-                                    }}>Are you sure ?</p>
-
-                            }
+            {!todoTask ?
+                <>
+                    {/* skeleton loader should be here */}
+                    <div className=' loarderTodo'>
+                        <div className='todo-loading-header'> </div>
+                        <div className='todo-loading-task-container'>
+                            <div className='todo-loader-task todo-one'></div>
+                            <div className='todo-loader-task todo-two'></div>
+                            <div className='todo-loader-task todo-three'></div>
+                            <div className='todo-loader-task todo-four'></div>
+                            <div className='todo-loader-task todo-five'></div>
+                            <div className='todo-loader-task todo-six'></div>
+                            <div className='todo-loader-task todo-seven'></div>
+                            <div className='todo-loader-task todo-eight'></div>
                         </div>
-
-
                     </div>
-                    <div className='todo-list-container'>
-                        {items?.task?.map((item, index) => (
+                </> :
+                <>{todoTask?.map((items, index) => (
+                    <div key={index} className='todo-card'
+                    //  style={{ backgroundColor: handleTodoListBg(items?.theme) }}
+
+                    >
+                        <div
+                            className='todo-title-container'
+                            style={{ backgroundColor: handleTitleColor(items.theme) }} >
+                            <h2
+                                ref={containerRef}>
+                                <VariableProximity
+                                    label={`${items?.title}`}
+                                    className={'variable-proximity-demo'}
+                                    fromFontVariationSettings="'wght' 400, 'opsz' 19"
+                                    toFontVariationSettings="'wght' 1400, 'opsz' 40"
+                                    containerRef={containerRef}
+                                    radius={100}
+                                    falloff='linear'
+                                />
+
+                            </h2>
                             <div
-                                key={index}
-                                onDoubleClick={() => { handleSingleTaskUpdate(items?._id, item?._id) }}
-                                className='single-todo-container'
+                                className='task-delete-button'
+                                onMouseLeave={() => setConfirmTodoCardDeleteButtonVisibility(false)}
+                            // style={{ width: confirmTodoCardDeleteButtonVisibility ? "100%" : "", transitionDuration:".4s" }}
 
                             >
-                                {item?.isCompleted ? <>
-                                    <span className='completedTask'>
-                                        {item?.name}
-                                    </span>
-                                </> : <>
-                                    <span >
+                                <img
+                                    onClick={() => HandleImageVisibility()}
+                                    src="/img/delete_todo.png" alt="" />
+                                {confirmTodoCardDeleteButtonVisibility &&
+                                    <p
+                                        onClick={() => HandleTodoDelete(items?._id)}
+                                        style={{
+                                            color: "#353535ff",
+                                            cursor: "pointer",
+                                            fontWeight: "bold",
+                                        }}>Are you sure ?</p>
 
-                                        <ShinyText
-                                            text={`${item?.name}`}
-                                            disabled={false}
-                                            speed={5}
-                                            className='custom-class'
-                                        />
-
-                                    </span>
-                                </>}
-
-                                <div
-                                    className='todo-delete-completed-button-container'
-                                    onClick={() => handleTodoRemove(items?._id, item?._id)}
-                                    style={{ left: currentTodoId === item?._id ? "0px" : "", width: currentTodoId === items?._id ? "100%" : "" }}
-
-                                >
-                                    <img src="/img/delete_todo.png" alt="" />
-                                </div>
-                                {/* <p>{items?.isCompleted ? "true" : "false"}</p> */}
+                                }
                             </div>
 
-                        ))}
-                    </div>
-                    <div className='todo-info-container'>
-                        <p>{formatDate(items?.createdAt)}</p>
-                    </div>
 
-                </div>
-            ))}</>
+                        </div>
+                        <div className='todo-list-container'>
+                            {items?.task?.map((item, index) => (
+                                <div
+                                    key={index}
+                                    onDoubleClick={() => { handleSingleTaskUpdate(items?._id, item?._id) }}
+                                    className='single-todo-container'
+
+                                >
+                                    {item?.isCompleted ? <>
+                                        <span className='completedTask'>
+                                            {item?.name}
+                                        </span>
+                                    </> : <>
+                                        <span >
+
+                                            <ShinyText
+                                                text={`${item?.name}`}
+                                                disabled={false}
+                                                speed={5}
+                                                className='custom-class'
+                                            />
+
+                                        </span>
+                                    </>}
+
+                                    <div
+                                        className='todo-delete-completed-button-container'
+                                        onClick={() => handleTodoRemove(items?._id, item?._id)}
+                                        style={{ left: currentTodoId === item?._id ? "0px" : "", width: currentTodoId === items?._id ? "100%" : "" }}
+
+                                    >
+                                        <img src="/img/delete_todo.png" alt="" />
+                                    </div>
+                                    {/* <p>{items?.isCompleted ? "true" : "false"}</p> */}
+                                </div>
+
+                            ))}
+                        </div>
+                        <div className='todo-info-container'>
+                            <p>
+                                <ShinyText
+                                    text={`${formatDate(items?.createdAt)}`}
+                                    disabled={false}
+                                    speed={5}
+                                    className='custom-class'
+                                />
+                            </p>
+                        </div>
+
+                    </div>
+                ))}</>
             }
             <div className={`todo-add ${isactive ? "active" : ""}`} style={{ display: `${!isactive ? 'flex' : ''}` }}>
                 {isactive ?
                     <>
-                        <div onClick={handleTodo} className='exit-butotn-container'>X</div>
+                        <div onClick={handleTodo} className='exit-butotn-container'>
+                            <div className='close-button-container'>
+                                <img src="/img/cross.png" alt="" />
+                            </div>
+
+                        </div>
                         <div className='todo-add-form-container'>
                             <form onSubmit={handleSubmit} className="todo-form">
+                                <p>
+                                    <ShinyText
+                                        text={` *Title must pricise like "Todays Task"`}
+                                        disabled={false}
+                                        speed={5}
+                                        className='custom-class'
+                                    />
+
+
+                                </p>
                                 <input
                                     type="text"
                                     className="todo-input"
@@ -296,7 +332,6 @@ export default function TodoData() {
                                 <select
                                     className="todo-select"
                                     value={theme}
-
                                     onChange={(e) => setTheme(e.target.value)}
                                 >
                                     <option value="green">Green</option>
@@ -318,6 +353,20 @@ export default function TodoData() {
                                             onChange={(e) => setCurrentTask(e.target.value)}
 
                                         />
+                                        <div className='task-data'>
+                                            {taskList?.map((item, index) => (
+
+                                                <p key={index}>
+                                                    <ShinyText
+                                                        text={`${item}`}
+                                                        disabled={false}
+                                                        speed={5}
+                                                        className='custom-class'
+                                                    />
+                                                </p>
+                                            ))}
+                                        </div>
+
                                         {/* <label className="task-check">
                                                 <input
                                                     type="checkbox"
@@ -331,13 +380,23 @@ export default function TodoData() {
 
 
                                     <button type="button" className="add-task-btn" onClick={addTask}>
-                                        + Add Task
+                                        <ShinyText
+                                            text={`Add Task`}
+                                            disabled={false}
+                                            speed={5}
+                                            className='custom-class'
+                                        />
                                     </button>
                                 </div>
 
                                 <button type="submit" className="save-todo-btn">
-                                    {loading ? "Saving" : "Save Todo"}
 
+                                    <ShinyText
+                                        text={`${loading ? "Creating" : "Create Todo"}`}
+                                        disabled={false}
+                                        speed={5}
+                                        className='custom-class'
+                                    />
                                 </button>
                             </form>
 

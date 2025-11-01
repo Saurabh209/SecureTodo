@@ -35,7 +35,7 @@ function UserStrip({ user }) {
                             Welcome Back! {" "}
                             <span>
                                 <VariableProximity
-                                    label={`${user?.username}`}
+                                    label={`${user?.fullname}`}
                                     className={'variable-proximity-demo'}
                                     fromFontVariationSettings="'wght' 200, 'opsz' 19"
                                     toFontVariationSettings="'wght' 1000, 'opsz' 40"

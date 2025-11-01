@@ -35,7 +35,7 @@
         align-items: center;
         justify-content: center;
         background-color: red;
-        
+
         height: 100%;
         width: 100%;
         position: absolute;
@@ -46,12 +46,14 @@
           top: 0px;
         }
         img {
-          transition-duration: .4s;
+          transition-duration: 0.4s;
           height: 22px;
           width: auto;
         }
       }
       h2 {
+        text-wrap: nowrap;
+        // overflow: hidden;
         cursor: default;
         padding: 10px 5px;
         font-size: 24px;
@@ -103,6 +105,7 @@
         .completedTask {
           text-decoration: line-through;
           color: #9f9f9f;
+          font-style: italic;
         }
         span {
           padding: 0px 10px;
@@ -122,6 +125,7 @@
     }
     .todo-info-container {
       position: absolute;
+      padding: 5px;
       bottom: 2px;
       left: 5px;
       p {
@@ -133,22 +137,69 @@
   //     box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff73;
   //   }
 }
+.loarderTodo {
+  width: 260px;
+  background-color: #434343;
+  border-radius: 10px;
+  background-color: #595959;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  .todo-loading-header {
+    width: 100%;
+    height: 70px;
+    background-color: #2a2a2a;
+  }
+  .todo-loading-task-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0px;
+    gap: 6px;
+    width: 100%;
+  }
+  .todo-loader-task {
+    background-color: rgb(67, 67, 67);
+    padding: 0px 10px;
+    margin: 0px 10px;
+    height: 20px;
+    border-radius: 4px;
+  }
+  .todo-one {
+    width: 60%;
+  }
+  .todo-three {
+    width: 40%;
+  }
+  .todo-four {
+    width: 80%;
+  }
+  .todo-five {
+    width: 60%;
+  }
+  .todo-six {
+    width: 70%;
+  }
+  .todo-seven {
+    width: 60%;
+  }
+  .todo-eight {
+    width: 80%;
+  }
+}
 
 .todo-add {
   height: 350px;
   width: 260px;
   z-index: 5;
-  background-color: #434343;
+  background-color: #373737;
   // display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition-duration: 0.3s;
+  transition-duration: 0.4s;
   border-radius: 10px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
   &:hover {
-    background-color: #505050;
-    box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff73;
+    background-color: #424242;
+    // box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff73;
     .todo-add {
       img {
         filter: invert(95%) sepia(1%) saturate(0%) hue-rotate(174deg)
@@ -164,9 +215,20 @@
   }
   .exit-butotn-container {
     display: flex;
-    align-items: end;
     justify-content: end;
-    border: 1px solid black;
+
+    padding: 5px 5px;
+    .close-button-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 5px;
+    }
+
+    img {
+      height: 24px;
+      width: auto;
+    }
   }
 }
 
@@ -182,22 +244,19 @@
 }
 
 .todo-form {
-  background: #1e1e1e;
-  padding: 25px;
+  padding: 15px 25px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 8px;
   max-width: 450px;
-  margin: 30px auto;
+
   font-family: monospace;
 }
 
 .todo-input,
 .todo-select,
 .task-name {
-  width: 100%;
   padding: 10px 14px;
   border: 1px solid #333;
   border-radius: 6px;
@@ -216,8 +275,7 @@
 }
 
 .task-section {
-  background: #2b2b2b;
-  padding: 15px;
+  padding: 10px 0px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -232,9 +290,13 @@
 
 .task-input {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
   gap: 10px;
+  .task-data {
+    p {
+    }
+  }
 }
 
 .task-name {
@@ -245,10 +307,12 @@
   color: #bbb;
   font-size: 13px;
 }
-
+.add-task-btn {
+  max-width: 100px;
+}
 .add-task-btn,
 .save-todo-btn {
-  background: #4caf50;
+  background: #282828;
   color: white;
   padding: 10px 16px;
   border: none;
@@ -260,11 +324,38 @@
 
 .add-task-btn:hover,
 .save-todo-btn:hover {
-  background: #43a047;
+  background: #373737;
   transform: translateY(-2px);
 }
 
 .add-task-btn:active,
 .save-todo-btn:active {
   transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+  .todoCardContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 970px) {
+  .todoCardContainer {
+    grid-template-columns: repeat(2, 1fr);
+    .todo-card {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 610px) {
+  .todoCardContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .todo-add{
+    width: 100%;
+  }
+  .strip-right{
+    display: none;
+  }
 }
